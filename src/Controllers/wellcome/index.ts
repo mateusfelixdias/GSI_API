@@ -3,7 +3,8 @@ import { Request, Response } from 'express';
 export const getWelcomeMessage = {
   index: (_req: Request, res: Response) => {
     res.json({
-      data: "welcome api"
+      statusCode: `${res.statusCode}`,
+      data: "Test route - welcome api"
     });
   },
 }
