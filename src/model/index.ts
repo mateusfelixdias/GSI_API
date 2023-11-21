@@ -1,78 +1,80 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const ImoveisSchema = new mongoose.Schema({
+const HouseSchema = new mongoose.Schema({
   rented: {
     type: String,
-    required: true
+    required: true,
   },
   area: {
     type: Number,
-    required: true
+    required: true,
   },
   address: {
     type: String,
-    required: true
+    required: true,
   },
   comment: {
     type: String,
-    required: true
+    required: true,
   },
   newHouse: {
     type: String,
-    default: true
+    default: true,
   },
   price: {
     type: Number,
-    required: true
+    required: true,
   },
   rooms: {
     type: Number,
-    required: true
+    required: true,
   },
   imageUrls: {
-    type: String,
-    required: true
+    default: [],
+    required: false,
+    type: [{ imageUrl: String, imageName: String }],
   },
   garage: {
     type: Number,
-    required: true
+    required: true,
   },
   typeHouse: {
     type: String,
-    required: true
+    required: true,
   },
   bathroom: {
     type: Number,
-    required: true
+    required: true,
   },
   contactName: {
     type: String,
-    required: true
+    required: true,
   },
   contactEmail: {
     type: String,
-    required: true
+    required: true,
   },
   neighborhood: {
     type: String,
-    required: true
+    required: true,
   },
   contactPhone: {
     type: String,
-    required: true
+    required: true,
   },
   selectedDate: {
+    default: '',
     type: String,
-    required: true
+    required: false,
   },
   contactAddress: {
     type: String,
-    required: true
+    required: true,
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-export const Imoveis = mongoose.model("Imoveis", ImoveisSchema);
+export const House = mongoose.model('Houses', HouseSchema);

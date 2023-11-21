@@ -1,13 +1,14 @@
 import { Router } from 'express';
-import { getWelcomeMessage } from '../Controllers/wellcome';
-import { ImoveisController } from '../Controllers/ImoveisController';
+import { HousesController } from '../controllers/HousesController';
 
 export const routes = Router();
 
-// Rota para teste 
-routes.get('/', getWelcomeMessage.index)
-routes.get('/imoveis/getAll', ImoveisController.index)
-routes.get('/imoveis/getOne/:id', ImoveisController.show)
-routes.post('/imoveis/create', ImoveisController.store)
-routes.put('/imoveis/update/:id', ImoveisController.update)
-routes.delete('/imoveis/delete/:id', ImoveisController.update)
+routes.post('/houses', HousesController.store);
+routes.post('/houses/filter', HousesController.filter);
+
+routes.get('/houses', HousesController.index);
+routes.get('/houses/:id', HousesController.show);
+
+routes.put('/houses/:id', HousesController.update);
+
+routes.delete('/houses/:id', HousesController.delete);
