@@ -71,8 +71,8 @@ export const HousesController = {
           { bathroom: houseData.bathroom },
           { typeHouse: houseData.typeHouse },
           { neighborhood: houseData.neighborhood },
-          { area: { $lte: houseData.area, $gt: 0 } },
-          { price: { $lte: houseData.price, $gt: 0 } },
+          { area: { $gte: 1, $lte: houseData.area } },
+          { price: { $gte: 1, $lte: houseData.price } },
         ],
       };
 
