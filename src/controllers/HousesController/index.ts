@@ -60,23 +60,31 @@ export const HousesController = {
   filter: async (req: Request, res: Response) => {
     try {
       const houseData = extractHouseData(req);
+      const removedValuesZeroAndUndefined: { [key: string]: any }[] = [];
+
+      Object.entries(houseData).forEach(([key, value]) => {
+        if (!value) return;
+
+        const isKeyPriceOrArea = key === 'area' || key === 'price';
+        if (isKeyPriceOrArea) {
+          const newValue = { $gte: 1, $lte: value };
+          removedValuesZeroAndUndefined.push({ [key]: newValue });
+
+          return;
+        }
+
+        const isString = typeof value === 'string';
+        const newValue = isString ? value.trim() : value;
+        removedValuesZeroAndUndefined.push({ [key]: newValue });
+      });
 
       const filter = {
-        $or: [
-          { rooms: houseData.rooms },
-          { garage: houseData.garage },
-          { rented: houseData.rented },
-          { address: houseData.address },
-          { newHouse: houseData.newHouse },
-          { bathroom: houseData.bathroom },
-          { typeHouse: houseData.typeHouse },
-          { neighborhood: houseData.neighborhood },
-          { area: { $gte: 1, $lte: houseData.area } },
-          { price: { $gte: 1, $lte: houseData.price } },
-        ],
+        $and: [...removedValuesZeroAndUndefined],
       };
 
-      const houses = await House.find(filter);
+      const options = { strength: 1, locale: 'pt' };
+      const houses = await House.find(filter).collation(options);
+
       res.status(200).json(houses);
     } catch (error) {
       const message = 'Failed to filter houses';
@@ -112,12 +120,12 @@ export const HousesController = {
 
   update: async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
+      const { id: _id } = req.params;
       const houseData = extractHouseData(req);
 
       const updateOptions = { new: true };
-      const updatedHouse = await House.findByIdAndUpdate(
-        id,
+      const updatedHouse = await House.findOneAndUpdate(
+        { _id },
         houseData,
         updateOptions
       );
@@ -136,8 +144,8 @@ export const HousesController = {
 
   delete: async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
-      const deletedHouses = await House.findByIdAndDelete(id);
+      const { id: _id } = req.params;
+      const deletedHouses = await House.findOneAndDelete({ _id });
 
       const messageNotFound = 'Houses not found';
       const message = messageNotFound;
