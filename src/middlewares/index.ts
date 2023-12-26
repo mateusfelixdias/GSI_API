@@ -7,7 +7,11 @@ export const validateTokenMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers.authorization;
+  const { headers, query } = req;
+  const token = headers.authorization;
+
+  const { accessApiKey = null } = query;
+  if (accessApiKey === env.ACCESS_API_KEY) next();
 
   if (!token) {
     return res.status(401).json({ mensagem: 'Token não fornecido.' });
