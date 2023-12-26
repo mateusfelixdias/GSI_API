@@ -2,16 +2,18 @@ import { env } from '../env';
 import jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
 
-export const validateTokenMiddleware = (
+export const validateAccessMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { headers, query } = req;
-  const token = headers.authorization;
+  const { accessApiKey = null } = req.query;
+  if (accessApiKey === env.ACCESS_API_KEY) {
+    next();
+    return;
+  }
 
-  const { accessApiKey = null } = query;
-  if (accessApiKey === env.ACCESS_API_KEY) next();
+  const token = req.headers.authorization;
 
   if (!token) {
     return res.status(401).json({ mensagem: 'Token não fornecido.' });
@@ -26,17 +28,4 @@ export const validateTokenMiddleware = (
 
     next();
   });
-};
-
-export const validateAccessApiKeyMiddleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { query } = req;
-  const { accessApiKey } = query;
-
-  if (accessApiKey !== env.ACCESS_API_KEY) res.status(401).end();
-
-  next();
 };
