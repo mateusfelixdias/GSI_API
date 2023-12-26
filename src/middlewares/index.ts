@@ -30,9 +30,9 @@ export const validateAccessApiKeyMiddleware = (
   next: NextFunction
 ) => {
   const { query } = req;
-  const { accessApyKey } = query;
+  const { accessApiKey } = query;
 
-  if (accessApyKey !== env.ACCESS_API_KEY) res.status(401).end();
+  if (accessApiKey !== env.ACCESS_API_KEY) res.status(401).end();
 
   next();
 };
