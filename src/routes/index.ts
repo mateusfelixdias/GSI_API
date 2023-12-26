@@ -1,14 +1,25 @@
 import { Router } from 'express';
+import { AuthController } from '../controllers/AuthController';
 import { HousesController } from '../controllers/HousesController';
+import {
+  validateTokenMiddleware,
+  validateAccessApiKeyMiddleware,
+} from '../middlewares';
 
 export const routes = Router();
 
-routes.post('/houses', HousesController.store);
-routes.post('/houses/filter', HousesController.filter);
+routes.get(
+  '/generate-token',
+  validateAccessApiKeyMiddleware,
+  AuthController.generateToken
+);
 
-routes.get('/houses', HousesController.index);
-routes.get('/houses/:id', HousesController.show);
+routes.post('/houses', validateTokenMiddleware, HousesController.store);
+routes.post('/houses/filter', validateTokenMiddleware, HousesController.filter);
 
-routes.put('/houses/:id', HousesController.update);
+routes.get('/houses', validateTokenMiddleware, HousesController.index);
+routes.get('/houses/:id', validateTokenMiddleware, HousesController.show);
 
-routes.delete('/houses/:id', HousesController.delete);
+routes.put('/houses/:id', validateTokenMiddleware, HousesController.update);
+
+routes.delete('/houses/:id', validateTokenMiddleware, HousesController.delete);
